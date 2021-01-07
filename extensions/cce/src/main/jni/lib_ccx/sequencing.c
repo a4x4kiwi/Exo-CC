@@ -15,7 +15,7 @@ void init_hdcc(struct lib_cc_decode *ctx)
 		ctx->cc_data_count[j] = 0;
 		ctx->cc_fts[j] = 0;
 	}
-	memset(ctx->cc_data_pkts, 0, SORTBUF * (31 * 3 + 1));
+	//memset(ctx->cc_data_pkts, 0, SORTBUF * (31 * 3 + 1));
 	ctx->has_ccdata_buffered = 0;
 }
 
@@ -59,7 +59,7 @@ void store_hdcc(struct encoder_ctx *enc_ctx, struct lib_cc_decode *dec_ctx, unsi
 			dec_ctx->cc_fts[seq_index] = current_fts_now; // CFS: Maybe do even if there's no data?
 			//if (stream_mode!=CCX_SM_MP4) // CFS: Very ugly hack, but looks like overwriting is needed for at least some ES
 			dec_ctx->cc_data_count[seq_index] = 0;
-			memcpy(dec_ctx->cc_data_pkts[seq_index] + dec_ctx->cc_data_count[seq_index] * 3, cc_data, cc_count * 3 + 1);
+			//memcpy(dec_ctx->cc_data_pkts[seq_index] + dec_ctx->cc_data_count[seq_index] * 3, cc_data, cc_count * 3 + 1);
 		}
 		dec_ctx->cc_data_count[seq_index] += cc_count;
 	}
@@ -121,17 +121,17 @@ void process_hdcc(struct encoder_ctx *enc_ctx, struct lib_cc_decode *dec_ctx, st
 		if (dec_ctx->cc_data_count[seq] == 0)
 			continue;
 
-		if (dec_ctx->cc_data_pkts[seq][dec_ctx->cc_data_count[seq] * 3] != 0xFF)
+		/*if (dec_ctx->cc_data_pkts[seq][dec_ctx->cc_data_count[seq] * 3] != 0xFF)
 		{
 			// This is not optional. Something is wrong.
 			dbg_print(CCX_DMT_VERBOSE, "Missing 0xFF marker at end\n");
 			// A "continue;" here would ignore this caption, but we
 			// process it.
-		}
+		}*/
 
 		// Re-create original time
 		dec_ctx->timing->fts_now = dec_ctx->cc_fts[seq];
-		process_cc_data(enc_ctx, dec_ctx, dec_ctx->cc_data_pkts[seq], dec_ctx->cc_data_count[seq], sub);
+		//process_cc_data(enc_ctx, dec_ctx, dec_ctx->cc_data_pkts[seq], dec_ctx->cc_data_count[seq], sub);
 	}
 
 	// Restore the value

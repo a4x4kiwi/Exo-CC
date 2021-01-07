@@ -13,7 +13,7 @@ public class CceObject {
     private Object lib;
 
     public CceObject() {
-        Log.i("LUCI_CCC", "CceObject construction is called");
+        Log.i("LUCI_CCE", "CceObject construction is called");
         try {
             Class<?> clazz = Class.forName("com.google.android.exoplayer2.ext.cce.CceLibrary");
             Constructor<?> constructor = clazz.getConstructor();

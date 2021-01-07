@@ -15,21 +15,31 @@ volatile int terminate_asap = 0;
 struct ccx_s_options ccx_options;
 struct lib_ccx_ctx *signal_ctx;
 struct ccx_s_options* g_api_options;
-struct lib_ccx_ctx* g_ctx;
+struct lib_ccx_ctx** g_ctx = NULL;
+struct lib_cc_decode **g_dec_ctx = NULL;
 
 // * EXTERN VARIABLES *
 
 unsigned char shared_byte_array[1024*1024*8];
 int shared_byte_array_size = 0;
+pthread_once_t once1 = PTHREAD_ONCE_INIT;
 pthread_mutex_t mutex1;
 
 unsigned char shared_subtitles[1024*1024*8];
 int shared_subtitles_size = 0;
 int shared_subtitles_lines = -1;
+pthread_once_t once2 = PTHREAD_ONCE_INIT;
 pthread_mutex_t mutex2;
 
 FILE* log_fp = NULL;
-pthread_mutex_t mutex3;
+
+void mutex_init1() {
+    pthread_mutex_init(&mutex1, NULL);
+}
+
+void mutex_init2() {
+    pthread_mutex_init(&mutex2, NULL);
+}
 
 void sigusr1_handler(int sig) {
     mprint("Caught SIGUSR1. Filename Change Requested\n");
@@ -54,6 +64,7 @@ void print_end_msg(void) {
 }
 
 int init_ccextractor(int argc, char **argv/*, const char* logPath*/) {
+
     // Initialize variables.
     shared_byte_array[0] = 0;
     shared_byte_array_size = 0;
@@ -66,10 +77,10 @@ int init_ccextractor(int argc, char **argv/*, const char* logPath*/) {
         fclose(log_fp);
     log_fp = NULL; //fopen(logPath, "w");
 
-    /*if (g_ctx != 0) {
-        close_input_file(g_ctx);
-        dinit_libraries(&g_ctx);
-    }*/
+    //if (g_ctx != 0) {
+    //    close_input_file(g_ctx);
+    //    dinit_libraries(g_ctx);
+   // }
 
     setlocale(LC_ALL, ""); // Supports non-English CCs
 
@@ -118,7 +129,7 @@ void deinit_ccextractor() {
         fclose(log_fp);
     }
 }
-
+int s = 0;
 int write_shared_bytes(unsigned char* byteArray, int length) {
     if (length != 0 && byteArray != NULL) {
         while (shared_byte_array_size + length > 1024*1024*7) {
@@ -128,18 +139,22 @@ int write_shared_bytes(unsigned char* byteArray, int length) {
             sleep(1);
         }
 
-        pthread_mutex_lock(&mutex1);
+        pthread_once(&once1, mutex_init1);
+        int p_res = pthread_mutex_lock(&mutex1);
 
-        memcpy(shared_byte_array + shared_byte_array_size, byteArray, length);
-        shared_byte_array_size += length;
+        if (p_res == 0) {
+            memcpy(shared_byte_array + shared_byte_array_size, byteArray, length);
+            shared_byte_array_size += length;
 
-        if (shared_byte_array_size % 100000 > 0 && shared_byte_array_size % 100000 <= 1880) {
-            LOGI("Write into shared memory(%d bytes) from the stream (current size = %d)", length,
-                 shared_byte_array_size);
-            if(log_fp) fprintf(log_fp, "Write into shared memory(%d bytes) from the stream (current size = %d)\n", length, shared_byte_array_size);
+            if (shared_byte_array_size % 100000 > 0 && shared_byte_array_size % 100000 <= 1880) {
+                LOGI("Write into shared memory(%d bytes) from the stream (current size = %d)", length,
+                     shared_byte_array_size);
+                if(log_fp) fprintf(log_fp, "Write into shared memory(%d bytes) from the stream (current size = %d)\n", length, shared_byte_array_size);
+            }
+            pthread_mutex_unlock(&mutex1);
+        } else {
+            LOGI("pthread_mutex_lock failed (res = %d)", p_res);
         }
-
-        pthread_mutex_unlock(&mutex1);
 
         return 1;
     }
@@ -171,7 +186,6 @@ Dialogue: 0,98:00:01.00,99:00:00.00,Default,,0000,0000,0000,,\\N\n";
 
 
 int run_ccextractor(long total_inputsize) {
-
     struct sigaction actions;
     memset(&actions, 0, sizeof(actions));
     sigemptyset(&actions.sa_mask);
@@ -207,7 +221,7 @@ int run_ccextractor(long total_inputsize) {
     LOGI("Initialize libraries: Total input size is %ld bytes", total_inputsize);
     if(log_fp) fprintf(log_fp, "Initialize libraries: Total input size is %ld bytes\n", total_inputsize);
 
-    g_ctx = ctx;
+    g_ctx = &ctx;
 #ifdef ENABLE_PYTHON
     int i = 0;
 

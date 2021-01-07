@@ -46,18 +46,25 @@ extern struct lib_ccx_ctx *signal_ctx;
 //volatile int terminate_asap = 0;
 
 extern struct ccx_s_options* g_api_options;
-extern struct lib_ccx_ctx* g_ctx;
+extern struct lib_ccx_ctx** g_ctx;
+extern struct lib_cc_decode **g_dec_ctx;
 
 extern unsigned char shared_byte_array[1024*1024*8];
 extern int shared_byte_array_size;
+extern pthread_once_t once1;
 extern pthread_mutex_t mutex1;
 
 extern unsigned char shared_subtitles[1024*1024*8];
 extern int shared_subtitles_size;
 extern int shared_subtitles_lines;
+extern pthread_once_t once2;
 extern pthread_mutex_t mutex2;
 
 extern FILE* log_fp;
+
+void mutex_init1();
+void mutex_init2();
+void mutex_init3();
 
 struct ccx_s_options* api_init_options();
 
@@ -69,7 +76,8 @@ int init_ccextractor(int argc, char **argv/*, const char* path*/);
 int run_ccextractor(long total_inputsize);
 int write_shared_bytes(unsigned char* byteArray, int length);
 int get_header(unsigned char** data);
-int append_subtitle();
+void append_subtitle();
+//void testFunc();
 void deinit_ccextractor();
 void thread_exit_handler(int);
 

@@ -217,7 +217,7 @@ struct lib_cc_decode
 	// Store fts;
 	LLONG cc_fts[SORTBUF];
 	// Store HD CC packets
-	unsigned char cc_data_pkts[SORTBUF][10*31*3+1]; // *10, because MP4 seems to have different limits
+	//unsigned char cc_data_pkts[SORTBUF][10*31*3+1]; // *10, because MP4 seems to have different limits
 
 	// The sequence number of the current anchor frame.  All currently read
 	// B-Frames belong to this I- or P-frame.

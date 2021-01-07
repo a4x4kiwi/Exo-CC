@@ -3,54 +3,6 @@
     "name": "UDP",
     "samples": [
       {
-        "name": "ABC News SD",
-        "uri": "udp://@239.7.0.24:1234",
-        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
-        "subtitle_mime_type": "text/x-ssa",
-        "subtitle_language": "en",
-        "is_live": true
-      },
-      {
-        "name": "SBS HD",
-        "uri": "udp://@239.7.0.30:1234",
-        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
-        "subtitle_mime_type": "text/x-ssa",
-        "subtitle_language": "en",
-        "is_live": true
-      },
-      {
-        "name": "Casper One",
-        "uri": "udp://@239.1.1.101:1234",
-        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
-        "subtitle_mime_type": "text/x-ssa",
-        "subtitle_language": "en",
-        "is_live": true
-      },
-      {
-        "name": "Casper Two",
-        "uri": "udp://@239.1.1.102:1234",
-        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
-        "subtitle_mime_type": "text/x-ssa",
-        "subtitle_language": "en",
-        "is_live": true
-      },
-      {
-        "name": "Casper Three",
-        "uri": "udp://@239.1.1.103:1234",
-        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
-        "subtitle_mime_type": "text/x-ssa",
-        "subtitle_language": "en",
-        "is_live": true
-      },
-      {
-        "name": "Casper Four",
-        "uri": "udp://@239.1.1.104:1234",
-        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
-        "subtitle_mime_type": "text/x-ssa",
-        "subtitle_language": "en",
-        "is_live": true
-      },
-      {
         "name": "239.7.0.2:1234",
         "uri": "udp://@239.7.0.2:1234",
         "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
@@ -91,8 +43,112 @@
         "is_live": true
       },
       {
+        "name": "239.7.0.11:1234",
+        "uri": "udp://@239.7.0.11:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.12:1234",
+        "uri": "udp://@239.7.0.12:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.13:1234",
+        "uri": "udp://@239.7.0.13:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.14:1234",
+        "uri": "udp://@239.7.0.14:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.15:1234",
+        "uri": "udp://@239.7.0.15:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.20:1234",
+        "uri": "udp://@239.7.0.20:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.22:1234",
+        "uri": "udp://@239.7.0.22:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.23:1234",
+        "uri": "udp://@239.7.0.23:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.24:1234",
+        "uri": "udp://@239.7.0.24:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.30:1234",
+        "uri": "udp://@239.7.0.30:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
         "name": "239.7.0.31:1234",
         "uri": "udp://@239.7.0.31:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.32:1234",
+        "uri": "udp://@239.7.0.32:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.33:1234",
+        "uri": "udp://@239.7.0.33:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.34:1234",
+        "uri": "udp://@239.7.0.34:1234",
         "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
         "subtitle_mime_type": "text/x-ssa",
         "subtitle_language": "en",
@@ -107,9 +163,126 @@
         "is_live": true
       },
       {
+        "name": "239.7.0.72:1234",
+        "uri": "udp://@239.7.0.72:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.73:1234",
+        "uri": "udp://@239.7.0.73:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.75:1234",
+        "uri": "udp://@239.7.0.75:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.76:1234",
+        "uri": "udp://@239.7.0.76:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.78:1234",
+        "uri": "udp://@239.7.0.78:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
         "name": "239.7.0.90:1234",
         "uri": "udp://@239.7.0.90:1234",
         "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.92:1234",
+        "uri": "udp://@239.7.0.92:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.93:1234",
+        "uri": "udp://@239.7.0.93:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.94:1234",
+        "uri": "udp://@239.7.0.94:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "239.7.0.95:1234",
+        "uri": "udp://@239.7.0.95:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "Casper One",
+        "uri": "udp://@238.1.1.201:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "Casper Two",
+        "uri": "udp://@238.1.1.202:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "Casper Three",
+        "uri": "udp://@238.1.1.203:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      },
+      {
+        "name": "Casper Four",
+        "uri": "udp://@238.1.1.204:1234",
+        "subtitle_uri": "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download",
+        "subtitle_mime_type": "text/x-ssa",
+        "subtitle_language": "en",
+        "is_live": true
+      }
+    ]
+  },
+  {
+    "name": "HTTP",
+    "samples": [
+      {
+        "name": "GOOGLE DRIVE",
+        "uri": "/storage/emulated/0/Pictures/A.ts",
+        "subtitle_uri": "/storage/emulated/0/Pictures/1.ass",
         "subtitle_mime_type": "text/x-ssa",
         "subtitle_language": "en",
         "is_live": true

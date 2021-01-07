@@ -31,10 +31,16 @@ int write_stringz_as_ssa(char *string, struct encoder_ctx *context, LLONG ms_sta
 	write_wrapped(context->out->fh, context->buffer, used);
 	int len = strlen(string);
 
-	pthread_mutex_lock(&mutex2);
-	memcpy(shared_subtitles + shared_subtitles_size, context->buffer, used);
-	shared_subtitles_size += used;
-	pthread_mutex_unlock(&mutex2);
+    pthread_once(&once2, mutex_init2);
+	int p_res = pthread_mutex_lock(&mutex2);
+	if (p_res == 0) {
+		memcpy(shared_subtitles + shared_subtitles_size, context->buffer, used);
+		shared_subtitles_size += used;
+		pthread_mutex_unlock(&mutex2);
+	} else {
+		LOGI("pthread_mutex_lock failed (res = %d)", p_res);
+	}
+
 
 	unsigned char *unescaped = (unsigned char *)malloc(len + 1);
 	unsigned char *el = (unsigned char *)malloc(len * 3 + 1); // Be generous
@@ -89,18 +95,23 @@ int write_stringz_as_ssa(char *string, struct encoder_ctx *context, LLONG ms_sta
 	LOGI("%02u:%02u:%02u.%01u,%02u:%02u:%02u.%02u: %s", h1, m1, s1, ms1 / 10, h2, m2, s2, ms2 / 10, tmp);
 	if (log_fp) fprintf(log_fp, "\n%02u:%02u:%02u.%01u,%02u:%02u:%02u.%02u: %s\n", h1, m1, s1, ms1 / 10, h2, m2, s2, ms2 / 10, tmp);
 
-	pthread_mutex_lock(&mutex2);
+	pthread_once(&once2, mutex_init2);
+	p_res = pthread_mutex_lock(&mutex2);
+	if (p_res == 0) {
+		memcpy(shared_subtitles + shared_subtitles_size, tmp, cur);
+		shared_subtitles_size += cur;
 
-	memcpy(shared_subtitles + shared_subtitles_size, tmp, cur);
-	shared_subtitles_size += cur;
+		if (shared_subtitles_lines != -1) {
+			append_subtitle();
+			LOGI("Subtitle = %s\n", tmp);
+			if(log_fp) fprintf(log_fp, "Subtitle = %s\n", tmp);
+			shared_subtitles_size = 0;
+		}
 
-	if (shared_subtitles_lines != -1) {
-		append_subtitle();
-
-		shared_subtitles_size = 0;
-    }
-
-	pthread_mutex_unlock(&mutex2);
+		pthread_mutex_unlock(&mutex2);
+	} else {
+		LOGI("pthread_mutex_lock failed (res = %d)", p_res);
+	}
 
 	free(tmp);
 

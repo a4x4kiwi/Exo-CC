@@ -87,10 +87,13 @@ struct
 {
 	uint16_t character;
 	const char *entity;
-} const ENTITIES[] = {
-    {'<', "&lt;"},
+} const ENTITIES[] =
+	{   {'<', "<"},
+		{'>', ">"},
+		{'&', "&"}};
+/*{ {'<', "&lt;"},
     {'>', "&gt;"},
-    {'&', "&amp;"}};
+    {'&', "&amp;"}}; */
 
 // Latin-Russian characters mapping, issue #1086
 struct

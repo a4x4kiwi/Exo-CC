@@ -211,7 +211,8 @@ public final class EGLSurfaceTexture implements SurfaceTexture.OnFrameAvailableL
     boolean eglInitialized =
         EGL14.eglInitialize(display, version, /* majorOffset= */ 0, version, /* minorOffset= */ 1);
     if (!eglInitialized) {
-      throw new GlException("eglInitialize failed");
+      Log.e("CCEJNI", "error:" + EGL14.eglGetError());
+      //  throw new GlException("eglInitialize failed");
     }
     return display;
   }

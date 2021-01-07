@@ -308,6 +308,7 @@ void return_to_buffer(struct ccx_demuxer *ctx, unsigned char *buffer, unsigned i
  *
  * TODO instead of using global ccx_options move them to ccx_demuxer
  */
+
 size_t buffered_read_opt(struct ccx_demuxer *ctx, unsigned char *buffer, size_t bytes)
 {
 	size_t origin_buffer_size = bytes;
@@ -401,16 +402,36 @@ size_t buffered_read_opt(struct ccx_demuxer *ctx, unsigned char *buffer, size_t 
 				        sleep(1);
 				    }
 
-				    pthread_mutex_lock(&mutex1);
-				    memcpy(ctx->filebuffer+keep, shared_byte_array, shared_byte_array_size);
+					pthread_once(&once1, mutex_init1);
+				    int p_res = pthread_mutex_lock(&mutex1);
+				    if (p_res == 0) {
+                        if (shared_byte_array && ctx->filebuffer) {
+                          memcpy(ctx->filebuffer+keep, shared_byte_array, shared_byte_array_size);
 
-				    LOGI("Read %d bytes from shared bytes.\n", shared_byte_array_size);
-                    if(log_fp) fprintf(log_fp, "Read %d bytes from shared bytes.\n", shared_byte_array_size);
+                          LOGI("Read %d bytes from shared bytes.\n", shared_byte_array_size);
+                          if(log_fp) fprintf(log_fp, "Read %d bytes from shared bytes.\n", shared_byte_array_size);
 
-				    i = shared_byte_array_size;
-				    shared_byte_array_size = 0;
-                    pthread_mutex_unlock(&mutex1);
+                          i = shared_byte_array_size;
+                          shared_byte_array_size = 0;
+                        } else if (shared_byte_array == NULL) {
+                          LOGI("Cannot read data from shared bytes. (source is null)\n");
+                          if(log_fp) fprintf(log_fp, "Cannot read data from shared bytes. (source is null)\n");
+                        } else {
+                          LOGI("Cannot read data from shared bytes. (destination is null)\n");
+                          if(log_fp) fprintf(log_fp, "Cannot read data from shared bytes. (destination is null)\n");
 
+                          LOGI("TRY TO MALLOC NEW BUFFER.");
+                          ctx->filebuffer = (unsigned char *)malloc(FILEBUFFERSIZE);
+                          LOGI("CREATED THE BUFFER SUCCESSFULLY.");
+                          for (int j = 0; j < keep; j ++) {ctx->filebuffer[j] = 0;}
+                          memcpy(ctx->filebuffer+keep, shared_byte_array, shared_byte_array_size);
+                          LOGI("ALL DATA IS COPIED INTO NEW BUFFER.");
+                        }
+
+						pthread_mutex_unlock(&mutex1);
+				    } else {
+						LOGI("pthread_mutex_lock failed (res = %d)", p_res);
+				    }
                     //	i = read(ctx->infd, ctx->filebuffer + keep, FILEBUFFERSIZE - keep);
 				}
 				else if (ccx_options.input_source == CCX_DS_TCP)
@@ -435,10 +456,14 @@ size_t buffered_read_opt(struct ccx_demuxer *ctx, unsigned char *buffer, size_t 
 			int copy = (int)(ready >= bytes ? bytes : ready);
 			if (copy)
 			{
-				if (buffer != NULL)
+				if (buffer != NULL && ctx->filebuffer)
 				{
 					memcpy(buffer, ctx->filebuffer + ctx->filebuffer_pos, copy);
 					buffer += copy;
+				} else if (buffer == NULL){
+                    LOGI("Cannot copy data. (buffer is null)\n");
+				} else {
+                    LOGI("Cannot copy data. (source is null)\n");
 				}
 				ctx->filebuffer_pos += copy;
 				bytes -= copy;

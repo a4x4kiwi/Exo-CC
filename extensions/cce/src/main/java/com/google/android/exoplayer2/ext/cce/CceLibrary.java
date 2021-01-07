@@ -7,6 +7,7 @@ import com.google.android.exoplayer2.util.ParsableByteArray;
 
 public class CceLibrary extends Object {
 
+
     public static String TAG = "TS_CCELIBRARY";
 
     static {
@@ -22,7 +23,6 @@ public class CceLibrary extends Object {
     private String logFolderPath;
 
     public CceLibrary() {
-
         logFolderPath = null;
     }
 
@@ -51,7 +51,7 @@ public class CceLibrary extends Object {
     }
 
     public void appendSubtitle(byte[] data) {
-        Log.i(TAG, "Append subtitles: " + new String(data));
+        Log.i(TAG, "Append subti    tles: " + new String(data));
         CceLibrary.subtitle.addSubtitles(new ParsableByteArray(data));
     }
 

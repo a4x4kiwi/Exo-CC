@@ -1,4 +1,5 @@
 #include "lib_ccx.h"
+#include "cce.h"
 #include "ccx_common_option.h"
 #include "activity.h"
 #include "utility.h"
@@ -321,6 +322,7 @@ struct lib_cc_decode *update_decoder_list_cinfo(struct lib_ccx_ctx *ctx, struct 
 		if (list_empty(&ctx->dec_ctx_head))
 		{
 			dec_ctx = init_cc_decode(ctx->dec_global_setting);
+			g_dec_ctx = &dec_ctx;
 			if (!dec_ctx)
 				fatal(EXIT_NOT_ENOUGH_MEMORY, "In update_decoder_list_cinfo: Not enough memory allocating dec_ctx (multiprogram == false)\n");
 			list_add_tail(&(dec_ctx->list), &(ctx->dec_ctx_head));

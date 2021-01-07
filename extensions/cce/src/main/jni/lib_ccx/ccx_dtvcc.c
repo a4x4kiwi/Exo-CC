@@ -69,10 +69,17 @@ void ccx_dtvcc_process_data(struct lib_cc_decode *ctx,
 
 //--------------------------------------------------------------------------------------
 
+static ccx_dtvcc_ctx *s_ctx = NULL;
 ccx_dtvcc_ctx *ccx_dtvcc_init(struct ccx_decoder_dtvcc_settings *opts)
 {
 	ccx_common_logging.debug_ftn(CCX_DMT_708, "[CEA-708] initializing dtvcc decoder\n");
+	if (s_ctx) {
+		free(s_ctx);
+		s_ctx = NULL;
+	}
+
 	ccx_dtvcc_ctx *ctx = (ccx_dtvcc_ctx *)malloc(sizeof(ccx_dtvcc_ctx));
+	s_ctx = ctx;
 	if (!ctx)
 	{
 		ccx_common_logging.fatal_ftn(EXIT_NOT_ENOUGH_MEMORY, "[CEA-708] ccx_dtvcc_init");

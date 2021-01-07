@@ -34,7 +34,6 @@
 #include <pthread.h>
 
 
-
 #define CCE_FUNC(RETURN_TYPE, NAME, ...)                         \
  /* extern "C" {                                                       \
   JNIEXPORT RETURN_TYPE                                              \
@@ -52,9 +51,23 @@ jobject gl_ActivityObj;
 
 pthread_t thread_id;
 
-CCE_FUNC(void, jniInitCcextractor/*, jstring logFilePath*/) {
+static jmethodID mid_callback;
 
-    LOGI("tlt_config.page = %d", tlt_config.page);
+JNIEnv* getEnv() {
+  JNIEnv *env;
+  if (gl_JVM == NULL)
+    return NULL;
+  int status = (*gl_JVM)->GetEnv(gl_JVM, (void**)&env, JNI_VERSION_1_6);
+  if(status < 0) {
+    status = (*gl_JVM)->AttachCurrentThread(gl_JVM, &env, NULL);
+    if(status < 0) {
+      return NULL;
+    }
+  }
+  return env;
+}
+
+CCE_FUNC(void, jniInitCcextractor/*, jstring logFilePath*/) {
 
   deinit_ccextractor();
 
@@ -62,6 +75,10 @@ CCE_FUNC(void, jniInitCcextractor/*, jstring logFilePath*/) {
   jclass cls = (*env)->GetObjectClass(env, thiz);
   gl_ActivityClass = (*env)->NewGlobalRef(env, cls);
   gl_ActivityObj = (*env)->NewGlobalRef(env, thiz);
+
+  if (cls != NULL) {
+    mid_callback = (*env)->GetMethodID(env, cls, "appendSubtitle",  "([B)V");
+  }
 
   if (thread_id != 0) {
     int status;
@@ -136,33 +153,33 @@ CCE_FUNC(jbyteArray, jniGetSsaHeader) {
     return ret;
 }
 
-
-int append_subtitle() {
+void append_subtitle() {
   JNIEnv *env;
-  (*gl_JVM)->AttachCurrentThread(gl_JVM, &env, NULL);
 
+  env = getEnv();
+  if ((*env) == NULL)
+    return;
   (*env)->ExceptionClear(env);
-  jmethodID mid_callback = (*env)->GetMethodID(env, gl_ActivityClass, "appendSubtitle", "([B)V");
-
   int size = shared_subtitles_size;
   jbyteArray ba = (*env)->NewByteArray(env, size);
+  if (ba == NULL)
+    return;
   jbyte *bytes = (*env)->GetByteArrayElements(env, ba, 0);
   memcpy(bytes, shared_subtitles, size);
   (*env)->SetByteArrayRegion(env, ba, 0, size, bytes);
-  (*env)->CallVoidMethod(env, gl_ActivityObj, mid_callback, ba);
+  if (mid_callback != NULL) {
+    (*env)->CallVoidMethod(env, gl_ActivityObj, mid_callback, ba);
+  }
 
   (*env)->ReleaseByteArrayElements(env, ba, bytes, JNI_ABORT);
   (*env)->DeleteLocalRef(env, ba);
 }
 
-
 CCE_FUNC(void, jniFinishedHeader) {
   shared_subtitles_lines = 0;
 }
 
-
 CCE_FUNC(void, jniEndCcextractor) {
-
     LOGI("Exit the extractor.");
     if (log_fp) fprintf(log_fp, "Exit the extractor.\n");
 
@@ -171,10 +188,10 @@ CCE_FUNC(void, jniEndCcextractor) {
 
     int status;
     if ((status = pthread_kill(thread_id, SIGUSR2)) != 0) {
-        LOGI("Error cancelling thread %d, error = %d (%s)", thread_id, status, strerror(status));
-        if (log_fp)
-            fprintf(log_fp, "Error cancelling thread %d, error = %d (%s)", thread_id, status,
-                    strerror(status));
+      LOGI("Error cancelling thread %d, error = %d (%s)", thread_id, status, strerror(status));
+      if (log_fp)
+        fprintf(log_fp, "Error cancelling thread %d, error = %d (%s)", thread_id, status,
+                strerror(status));
     }
 
     (*env)->DeleteGlobalRef(env, gl_ActivityClass);

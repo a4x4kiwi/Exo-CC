@@ -852,8 +852,8 @@ int general_loop(struct lib_ccx_ctx *ctx)
 
 	stream_mode = ctx->demux_ctx->get_stream_mode(ctx->demux_ctx);
 
-	LOGI("Get the stream mode.");
-	if (log_fp) fprintf(log_fp, "Get the stream mode.\n");
+	LOGI("Get the stream mode(%d).", stream_mode);
+	if (log_fp) fprintf(log_fp, "Get the stream mode(%d).\n", stream_mode);
 
 	if (stream_mode == CCX_SM_TRANSPORT && ctx->write_format == CCX_OF_NULL)
 		ctx->multiprogram = 1;
