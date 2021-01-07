@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
@@ -64,6 +65,8 @@ import com.google.android.exoplayer2.source.ads.AdsMediaSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
+import com.google.android.exoplayer2.text.Cue;
+import com.google.android.exoplayer2.text.TextOutput;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector.MappedTrackInfo;
@@ -78,15 +81,17 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.EventLogger;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
 import java.lang.reflect.Constructor;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.util.List;
 
 /** An activity that plays media using {@link SimpleExoPlayer}. */
 public class PlayerActivity extends AppCompatActivity
-    implements OnClickListener, PlaybackPreparer, PlayerControlView.VisibilityListener {
+    implements OnClickListener, PlaybackPreparer, PlayerControlView.VisibilityListener, Runnable {
 
   // Activity extras.
 
@@ -144,6 +149,7 @@ public class PlayerActivity extends AppCompatActivity
   private Button selectTracksButton;
   private TextView debugTextView;
   private boolean isShowingTrackSelectionDialog;
+  private TextView subtitlesView;
 
   private DataSource.Factory dataSourceFactory;
   private SimpleExoPlayer player;
@@ -187,6 +193,9 @@ public class PlayerActivity extends AppCompatActivity
     playerView.setControllerVisibilityListener(this);
     playerView.setErrorMessageProvider(new PlayerErrorMessageProvider());
     playerView.requestFocus();
+
+    subtitlesView = findViewById(R.id.subtitle);
+
     if (sphericalStereoMode != null) {
       int stereoMode;
       if (SPHERICAL_STEREO_MODE_MONO.equals(sphericalStereoMode)) {
@@ -218,6 +227,8 @@ public class PlayerActivity extends AppCompatActivity
       trackSelectorParameters = builder.build();
       clearStartPosition();
     }
+
+    this.run();
   }
 
   @Override
@@ -386,6 +397,18 @@ public class PlayerActivity extends AppCompatActivity
       player.addAnalyticsListener(new EventLogger(trackSelector));
       playerView.setPlayer(player);
       playerView.setPlaybackPreparer(this);
+
+      TextOutput listener = new TextOutput() {
+        @Override
+        public void onCues(List<Cue> cues) {
+          if (cues == null || cues.size() < 2)
+            return;
+          else
+            subtitlesView.setText(cues.get(1).text);
+        }
+      };
+      player.addTextOutput(listener);
+
       debugViewHelper = new DebugTextViewHelper(player, debugTextView);
       debugViewHelper.start();
       if (adsLoader != null) {
@@ -688,6 +711,27 @@ public class PlayerActivity extends AppCompatActivity
     return false;
   }
 
+  private String oldSubtitle = "";
+  private Handler h2 = new Handler();
+  @Override
+  public void run() {
+
+    if (player != null) {
+      long currentPos = player.getCurrentPosition();
+      Log.i("PlayerActivity", "Current Position : " + currentPos/60000 + "m " + (currentPos%60000)/1000 + "." + (currentPos%1000)/100 + "s");
+    }
+
+    // For Ads Sceen
+    String subtitle = subtitlesView.getText().toString();
+    if (subtitle.length() != 0) {
+      if (subtitle.equals(oldSubtitle) == true) {
+        subtitlesView.setText("");
+      }
+      oldSubtitle = subtitle;
+    }
+
+    h2.postDelayed(this, 5000);
+  }
   private class PlayerEventListener implements Player.EventListener {
 
     @Override

@@ -21,8 +21,23 @@
     android:keepScreenOn="true">
 
   <com.google.android.exoplayer2.ui.PlayerView android:id="@+id/player_view"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"/>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/subtitle"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:textColor="#FFFF00"
+    android:textSize="40dp"
+    android:layout_gravity="bottom"
+    android:layout_marginLeft="40dp"
+    android:layout_marginBottom="80dp"
+    android:fontFamily="@font/fixedsys"
+    android:visibility="visible"
+    />
 
   <LinearLayout
       android:layout_width="match_parent"

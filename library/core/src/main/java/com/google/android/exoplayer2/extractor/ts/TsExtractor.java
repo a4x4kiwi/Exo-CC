@@ -22,6 +22,7 @@ import android.util.SparseBooleanArray;
 import android.util.SparseIntArray;
 import androidx.annotation.IntDef;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.CceObject;
 import com.google.android.exoplayer2.ParserException;
 import com.google.android.exoplayer2.extractor.Extractor;
 import com.google.android.exoplayer2.extractor.ExtractorInput;
@@ -130,6 +131,11 @@ public final class TsExtractor implements Extractor {
   private int bytesSinceLastSync;
   private int pcrPid;
 
+  // New Variables related with CceEngine.
+  private byte[] bytesForLib = new byte[188 * 50];
+  private boolean firstPacket = true;
+  private int lengthForLib = 0;
+
   public TsExtractor() {
     this(0);
   }
@@ -181,6 +187,14 @@ public final class TsExtractor implements Extractor {
     durationReader = new TsDurationReader();
     pcrPid = -1;
     resetPayloadReaders();
+
+    initCceEngine();
+  }
+
+  public void initCceEngine() {
+    CceObject.inst.init();
+    lengthForLib = 0;
+    firstPacket = true;
   }
 
   // Extractor implementation.
@@ -200,6 +214,9 @@ public final class TsExtractor implements Extractor {
       }
       if (isSyncBytePatternCorrect) {
         input.skipFully(startPosCandidate);
+
+        CceObject.inst.AUS_SUBTITLE = true;
+
         return true;
       }
     }
@@ -244,7 +261,7 @@ public final class TsExtractor implements Extractor {
 
   @Override
   public void release() {
-    // Do nothing
+    CceObject.inst.finish();
   }
 
   @Override
@@ -283,6 +300,20 @@ public final class TsExtractor implements Extractor {
     }
 
     @TsPayloadReader.Flags int packetHeaderFlags = 0;
+
+    System.arraycopy(tsPacketBuffer.data, tsPacketBuffer.getPosition(), bytesForLib, lengthForLib, 188);
+    lengthForLib += 188;
+
+    if (lengthForLib == 1880) {
+      CceObject.inst.write(bytesForLib, lengthForLib);
+
+      if (firstPacket == true) {
+        CceObject.inst.run(inputLength);
+        firstPacket = false;
+      }
+
+      lengthForLib = 0;
+    }
 
     // Note: See ISO/IEC 13818-1, section 2.4.3.2 for details of the header format.
     int tsPacketHeader = tsPacketBuffer.readInt();

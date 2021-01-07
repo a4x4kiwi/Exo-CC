@@ -77,6 +77,7 @@ dependencies {
     withExtensionsImplementation project(path: modulePrefix + 'extension-opus')
     withExtensionsImplementation project(path: modulePrefix + 'extension-vp9')
     withExtensionsImplementation project(path: modulePrefix + 'extension-rtmp')
+    implementation project(modulePrefix + 'extension-cce')
 }
 
 apply plugin: 'com.google.android.gms.strict-version-matcher-plugin'

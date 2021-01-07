@@ -24,6 +24,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.accessibility.CaptioningManager;
 import androidx.annotation.Nullable;
+import com.google.android.exoplayer2.CceObject;
 import com.google.android.exoplayer2.text.CaptionStyleCompat;
 import com.google.android.exoplayer2.text.Cue;
 import com.google.android.exoplayer2.text.TextOutput;
@@ -246,6 +247,9 @@ public final class SubtitleView extends View implements TextOutput {
 
   @Override
   public void dispatchDraw(Canvas canvas) {
+    if (CceObject.inst != null && CceObject.inst.AUS_SUBTITLE)
+      return;
+
     List<Cue> cues = this.cues;
     if (cues == null || cues.isEmpty()) {
       return;
@@ -274,6 +278,9 @@ public final class SubtitleView extends View implements TextOutput {
     int cueCount = cues.size();
     for (int i = 0; i < cueCount; i++) {
       Cue cue = cues.get(i);
+      if (cue.text.equals("\\n")) {
+        continue;
+      }
       float cueTextSizePx = resolveCueTextSize(cue, rawViewHeight, viewHeightMinusPadding);
       SubtitlePainter painter = painters.get(i);
       painter.draw(
@@ -281,7 +288,7 @@ public final class SubtitleView extends View implements TextOutput {
           applyEmbeddedStyles,
           applyEmbeddedFontSizes,
           style,
-          defaultViewTextSizePx,
+          60, //defaultViewTextSizePx,
           cueTextSizePx,
           bottomPaddingFraction,
           canvas,

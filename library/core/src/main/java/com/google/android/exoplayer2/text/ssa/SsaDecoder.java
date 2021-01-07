@@ -20,6 +20,7 @@ import static com.google.android.exoplayer2.util.Util.castNonNull;
 import android.text.Layout;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.CceObject;
 import com.google.android.exoplayer2.text.Cue;
 import com.google.android.exoplayer2.text.SimpleSubtitleDecoder;
 import com.google.android.exoplayer2.text.Subtitle;
@@ -107,8 +108,18 @@ public final class SsaDecoder extends SimpleSubtitleDecoder {
     if (!haveInitializationData) {
       parseHeader(data);
     }
-    parseEventBody(data, cues, cueTimesUs);
-    return new SsaSubtitle(cues, cueTimesUs);
+
+    SsaDialogueFormat format = parseEventBody(data, cues, cueTimesUs);
+
+    SsaSubtitle subtitle = new SsaSubtitle(cues, cueTimesUs, format);
+
+    if (CceObject.inst.AUS_SUBTITLE) {
+      subtitle.decoder = this;
+      CceObject.inst.setSubtitle(subtitle);
+      CceObject.inst.finishedHeader();
+    }
+
+    return subtitle;
   }
 
   /**
@@ -206,7 +217,7 @@ public final class SsaDecoder extends SimpleSubtitleDecoder {
    * @param cues A list to which parsed cues will be added.
    * @param cueTimesUs A sorted list to which parsed cue timestamps will be added.
    */
-  private void parseEventBody(ParsableByteArray data, List<List<Cue>> cues, List<Long> cueTimesUs) {
+  private SsaDialogueFormat parseEventBody(ParsableByteArray data, List<List<Cue>> cues, List<Long> cueTimesUs) {
     @Nullable
     SsaDialogueFormat format = haveInitializationData ? dialogueFormatFromInitializationData : null;
     @Nullable String currentLine;
@@ -221,6 +232,7 @@ public final class SsaDecoder extends SimpleSubtitleDecoder {
         parseDialogueLine(currentLine, format, cues, cueTimesUs);
       }
     }
+    return format;
   }
 
   /**
@@ -231,7 +243,7 @@ public final class SsaDecoder extends SimpleSubtitleDecoder {
    * @param cues A list to which parsed cues will be added.
    * @param cueTimesUs A sorted list to which parsed cue timestamps will be added.
    */
-  private void parseDialogueLine(
+  public void parseDialogueLine(
       String dialogueLine, SsaDialogueFormat format, List<List<Cue>> cues, List<Long> cueTimesUs) {
     Assertions.checkArgument(dialogueLine.startsWith(DIALOGUE_LINE_PREFIX));
     String[] lineValues =
@@ -259,6 +271,15 @@ public final class SsaDecoder extends SimpleSubtitleDecoder {
             ? styles.get(lineValues[format.styleIndex].trim())
             : null;
     String rawText = lineValues[format.textIndex];
+
+    if (!rawText.equals("\\N")) {
+      int lines = rawText.split(Pattern.quote("\\N"), -1).length;
+      if (lines == 1)
+        rawText += "\\N\\N";
+      else if(lines == 2)
+        rawText += "\\N";
+    }
+
     SsaStyle.Overrides styleOverrides = SsaStyle.Overrides.parseFromDialogue(rawText);
     String text =
         SsaStyle.Overrides.stripStyleOverrides(rawText)

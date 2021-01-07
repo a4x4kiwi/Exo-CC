@@ -17,6 +17,7 @@ package com.google.android.exoplayer2.source;
 
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.CceObject;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.FormatHolder;
 import com.google.android.exoplayer2.SeekParameters;
@@ -32,6 +33,7 @@ import com.google.android.exoplayer2.upstream.Loader.Loadable;
 import com.google.android.exoplayer2.upstream.StatsDataSource;
 import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Assertions;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 import java.io.IOException;
@@ -45,6 +47,8 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
  */
 /* package */ final class SingleSampleMediaPeriod implements MediaPeriod,
     Loader.Callback<SingleSampleMediaPeriod.SourceLoadable>  {
+
+  private static final String TAG = "SingleSampleMediaPeriod";
 
   /**
    * The initial size of the allocation used to hold the sample data.
@@ -69,6 +73,8 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
   /* package */ boolean loadingFinished;
   /* package */ byte @MonotonicNonNull [] sampleData;
   /* package */ int sampleSize;
+
+  private static final String AUS_SUB_URL = "https://drive.google.com/u/1/uc?id=1nGMnErfRGXb8pEG3iFP_AZuMpmwLhpC5&export=download";
 
   public SingleSampleMediaPeriod(
       DataSpec dataSpec,
@@ -412,6 +418,16 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
             sampleData = Arrays.copyOf(sampleData, sampleData.length * 2);
           }
           result = dataSource.read(sampleData, sampleSize, sampleData.length - sampleSize);
+        }
+
+        if (CceObject.inst.AUS_SUBTITLE || dataSpec.uri.toString().equals(AUS_SUB_URL)) {
+          byte[] bytes = CceObject.inst.readHeader();
+
+          Arrays.fill(sampleData, (byte)0);
+
+          Log.i(TAG, "Parsing Subtitle Header(Size = " + bytes.length + ")");
+
+          System.arraycopy(bytes, 0, sampleData, 0, bytes.length);
         }
       } finally {
         Util.closeQuietly(dataSource);
