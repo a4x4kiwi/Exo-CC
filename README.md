@@ -1,6 +1,6 @@
 # Australia Subtitle How To #
 
-## Based on Exoplayer 
+## Based on Exoplayer 2.11.8
 
 I made the module named “extension-cce”, which is for getting the subtitle from Australian Channels.
 I inserted this module in “extension” folder.
@@ -68,7 +68,6 @@ public @ReadResult int read(ExtractorInput input, PositionHolder seekPosition)
 }										
 
 ```
-
   * 3.2>  In SingleSampleMediaPeriod 
 (com.android.google.exoplayer2.source.SingleSampleMediaPeriod)
 
@@ -88,7 +87,7 @@ public void load() throws IOException, InterruptedException {
 }										
 ```
 
- * 3.3>  In SsaDecoder (com.android.google.exoplayer2.text.ssa.SsaDecoder)
+  * 3.3>  In SsaDecoder (com.android.google.exoplayer2.text.ssa.SsaDecoder)
 
 ```
 protected Subtitle decode(byte[] bytes, int length, boolean reset) {				
